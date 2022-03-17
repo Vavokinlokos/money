@@ -1,7 +1,6 @@
 package main
 
 import (
-	"errors"
 	"fmt"
 	"strconv"
 	"strings"
@@ -20,27 +19,31 @@ var (
 func main() {
 	var input string
 	var result string
-	var err error
 	fmt.Println("Введите сумму, которую необходимо вывести словами >> ")
 	fmt.Scan(&input)
-	inputSlice, err := split(input)
+	result, err := Interpret(input)
 	if err != nil {
 		fmt.Println(err)
-		return
+	}
+	fmt.Println(result)
+	return
+}
+
+func Interpret(input string) (string, error) {
+	inputSlice, err := split(input)
+	if err != nil {
+		return "", err
 	}
 	integer := inputSlice[0]
 	fractional := inputSlice[1]
 	if integer == 1000000 {
-		fmt.Println("один миллион гривен")
-		return
+		return "один миллион гривен", nil
+	}
+	if integer > 1000000 {
+		return "", BigNumberError
 	}
 	if fractional > 99 {
-		fmt.Sprintf("%e Программа предназначена для обработки значений до 1 000 000 гривен", errors.New("НЕПРАВИЛЬНЫЙ ВВОД"))
-		return
-	}
-	if fractional > 99 {
-		fmt.Sprintf("%e Значение копеек не может превышать 99", errors.New("НЕПРАВИЛЬНЫЙ ВВОД"))
-		return
+		return "", BigCoinsNumberError
 	}
 	triads := getTriads(integer)
 	integerRes := make([]string, 0)
@@ -74,20 +77,19 @@ func main() {
 	if integerRes == nil {
 		integerRes = append(integerRes, "ноль ")
 	}
-	result = sliceToStr(integerRes) + hr + coin
-	fmt.Println(result)
-	return
+	return sliceToStr(integerRes) + hr + coin, nil
+
 }
 
 func convertPartsToInt(splittedInput []string) ([]int, error) {
 	res := make([]int, 0, 2)
 	integer, err := strconv.Atoi(splittedInput[0])
 	if err != nil {
-		return nil, fmt.Errorf("failed converting integer part to int. %e", err)
+		return nil, IntConvertError
 	}
 	fractional, err := strconv.Atoi(splittedInput[1])
 	if err != nil {
-		return nil, fmt.Errorf("failed converting fractional part to int. %e", err)
+		return nil, FractConvertError
 	}
 	res = append(res, integer)
 	res = append(res, fractional)
