@@ -16,7 +16,7 @@ func ReverseInterpret(input string) (string, error) {
 			continue
 		}
 		if i != len(splittedInput)-1 {
-			resultPart, flag, err := analise(v, splittedInput[i+1])
+			resultPart, flag, err := analyze(v, splittedInput[i+1])
 			if err != nil {
 				return "", err
 			}
@@ -27,7 +27,7 @@ func ReverseInterpret(input string) (string, error) {
 	return result, nil
 }
 
-func analise(value, next string) (string, bool, error) {
+func analyze(value, next string) (string, bool, error) {
 	if value == "ноль" {
 		return "0", false, nil
 	}
