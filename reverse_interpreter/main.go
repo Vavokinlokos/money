@@ -28,6 +28,9 @@ func ReverseInterpret(input string) (string, error) {
 }
 
 func analise(value, next string) (string, bool, error) {
+	if value == "ноль" {
+		return "0", false, nil
+	}
 	for _, v := range custom_constants.Hryvnia {
 		if v[:len(v)-1] == value {
 			return ".", false, nil

@@ -16,9 +16,9 @@ func main() {
 	}
 	fmt.Println(result)
 
-	//fmt.Println("Введите словами сумму, которую необходимо вывести цифрой >> ")
-	//fmt.Scanln(&input)
-	input = "четыреста три тысячи пятьсот сорок две гривны пятьдесят две копейки"
+	fmt.Println("Введите словами сумму, которую необходимо вывести цифрой >> ")
+	fmt.Scanln(&input)
+	input = "четыреста пятьдесят три гривны пятьдесят копеек"
 	reverseResult, err := reverse_interpreter.ReverseInterpret(input)
 	if err != nil {
 		fmt.Println(err)
