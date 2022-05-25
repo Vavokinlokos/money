@@ -1,7 +1,7 @@
 package main
 
 import (
-	"gitlab.com/valeriia_sokolnikova/money_words/custom_error"
+	"gitlab.com/valeriia_sokolnikova/money_words/custom_constants"
 	"gitlab.com/valeriia_sokolnikova/money_words/interpreter"
 	"testing"
 )
@@ -28,9 +28,9 @@ var testsStrings = []testPair{
 }
 
 var testErrors = []testError{
-	{"45.65585", custom_error.BigCoinsNumberError},
-	{"555555555", custom_error.BigNumberError},
-	{"*", custom_error.IntConvertError},
+	{"45.65585", custom_constants.BigCoinsNumberError},
+	{"555555555", custom_constants.BigNumberError},
+	{"*", custom_constants.IntConvertError},
 }
 
 func TestInterpret(t *testing.T) {

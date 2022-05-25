@@ -1,19 +1,9 @@
 package interpreter
 
 import (
-	"gitlab.com/valeriia_sokolnikova/money_words/custom_error"
+	"gitlab.com/valeriia_sokolnikova/money_words/custom_constants"
 	"strconv"
 	"strings"
-)
-
-var (
-	hryvnia   = []string{"гривна ", "гривны ", "гривен "}
-	coins     = []string{"копейка", "копейки", "копеек"}
-	thousands = []string{"тысяча ", "тысячи ", "тысяч "}
-	hundreds  = []string{"сто ", "двести ", "триста ", "четыреста ", "пятьсот ", "шестьсот ", "семьсот ", "восемьсот ", "девятьсот "}
-	dozens    = []string{"десять ", "двадцать ", "тридцать ", "сорок ", "пятьдесят ", "шестьдесят ", "семьдесят ", "восемьдесят ", "девяносто "}
-	dozens2   = []string{"одиннадцать ", "двенадцать ", "тринадцать ", "четырнадцать ", "пятнадцать ", "шестнадцать ", "семнадцать ", "восемнадцать ", "девятнадцать "}
-	units     = []string{"одна ", "две ", "три ", "четыре ", "пять ", "шесть ", "семь ", "восемь ", "девять "}
 )
 
 func Interpret(input string) (string, error) {
@@ -27,10 +17,10 @@ func Interpret(input string) (string, error) {
 		return "один миллион гривен", nil
 	}
 	if integer > 1000000 {
-		return "", custom_error.BigNumberError
+		return "", custom_constants.BigNumberError
 	}
 	if fractional > 99 {
-		return "", custom_error.BigCoinsNumberError
+		return "", custom_constants.BigCoinsNumberError
 	}
 	triads := getTriads(integer)
 	integerRes := make([]string, 0)
@@ -39,7 +29,7 @@ func Interpret(input string) (string, error) {
 	}
 	if len(triads) == 2 {
 		integerRes = convertToWords(triads[0])
-		integerRes = append(integerRes, thousands[declension(triads[0]%10)])
+		integerRes = append(integerRes, custom_constants.Thousands[declension(triads[0]%10)])
 		for _, word := range convertToWords(triads[1]) {
 			integerRes = append(integerRes, word)
 		}
@@ -47,19 +37,19 @@ func Interpret(input string) (string, error) {
 	var coin string
 	var hr string
 	if fractional/10 > 0 || (fractional < 20 && fractional >= 10) {
-		coin = sliceToStr(convertToWords(fractional)) + coins[declension((fractional%10)-1)]
+		coin = sliceToStr(convertToWords(fractional)) + custom_constants.Coins[declension((fractional%10)-1)]
 	} else {
 		if fractional == 0 {
 			coin = ""
 		} else {
-			coin = dozens[fractional-1] + coins[2]
+			coin = custom_constants.Dozens[fractional-1] + custom_constants.Coins[2]
 		}
 	}
 
 	if integer%100 < 20 && integer%100 >= 10 {
-		hr = hryvnia[2]
+		hr = custom_constants.Hryvnia[2]
 	} else {
-		hr = hryvnia[declension(triads[0]%10)]
+		hr = custom_constants.Hryvnia[declension(triads[0]%10)]
 	}
 	if integerRes == nil {
 		integerRes = append(integerRes, "ноль ")
@@ -72,11 +62,11 @@ func convertPartsToInt(splittedInput []string) ([]int, error) {
 	res := make([]int, 0, 2)
 	integer, err := strconv.Atoi(splittedInput[0])
 	if err != nil {
-		return nil, custom_error.IntConvertError
+		return nil, custom_constants.IntConvertError
 	}
 	fractional, err := strconv.Atoi(splittedInput[1])
 	if err != nil {
-		return nil, custom_error.FractConvertError
+		return nil, custom_constants.FractConvertError
 	}
 	res = append(res, integer)
 	res = append(res, fractional)
@@ -142,19 +132,19 @@ func convertToWords(num int) []string {
 		switch {
 		case num < 9:
 			unit := num % 10
-			res = append(res, units[unit-1])
+			res = append(res, custom_constants.Units[unit-1])
 			num = num - unit
 		case num < 20:
 			i := num % 10
-			res = append(res, dozens2[i-1])
+			res = append(res, custom_constants.Dozens2[i-1])
 			num = 0
 		case num < 99:
 			i := num / 10
-			res = append(res, dozens[i-1])
+			res = append(res, custom_constants.Dozens[i-1])
 			num = num - i*10
 		default:
 			i := num / 100
-			res = append(res, hundreds[i-1])
+			res = append(res, custom_constants.Hundreds[i-1])
 			num = num - i*100
 		}
 	}
