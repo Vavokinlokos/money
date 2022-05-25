@@ -1,6 +1,8 @@
 package main
 
 import (
+	"gitlab.com/valeriia_sokolnikova/money_words/custom_error"
+	"gitlab.com/valeriia_sokolnikova/money_words/interpreter"
 	"testing"
 )
 
@@ -26,14 +28,14 @@ var testsStrings = []testPair{
 }
 
 var testErrors = []testError{
-	{"45.65585", BigCoinsNumberError},
-	{"555555555", BigNumberError},
-	{"*", IntConvertError},
+	{"45.65585", custom_error.BigCoinsNumberError},
+	{"555555555", custom_error.BigNumberError},
+	{"*", custom_error.IntConvertError},
 }
 
 func TestInterpret(t *testing.T) {
 	for _, pair := range testsStrings {
-		v, _ := Interpret(pair.input)
+		v, _ := interpreter.Interpret(pair.input)
 		if v != pair.output {
 			t.Error(
 				"For", pair.input,
@@ -46,7 +48,7 @@ func TestInterpret(t *testing.T) {
 
 func TestErrors(t *testing.T) {
 	for _, pair := range testErrors {
-		_, err := Interpret(pair.input)
+		_, err := interpreter.Interpret(pair.input)
 		if err != pair.err {
 			t.Error(
 				"For", pair.input,
